@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Sephoc Motors Uganda</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<script src="js/partials.js"></script>
+<script>renderHeader("contact.html");</script>
+
+<section class="hero">
+  <h1 style="font-size:2rem;">Get in touch</h1>
+  <p class="sub">We usually reply within the hour on WhatsApp.</p>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="contact-grid">
+    <div class="contact-card whatsapp">
+      <div class="icon">💬</div>
+      <h3>WhatsApp</h3>
+      <p>(+256) 70 411 35 90<br>(+256) 76 661 75 63</p>
+      <a class="btn" href="#" id="wa-1" target="_blank">Chat now</a>
+    </div>
+    <div class="contact-card call">
+      <div class="icon">📞</div>
+      <h3>Call</h3>
+      <p>(+256) 70 411 35 90</p>
+      <a class="btn" href="tel:+256704113590">Call now</a>
+    </div>
+    <div class="contact-card location">
+      <div class="icon">📍</div>
+      <h3>Visit</h3>
+      <p>Naguru, Kampala, Uganda<br>Cadam Entreprises, Naguru — off Lugogo Bypass</p>
+      <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Naguru+Kampala+Uganda" target="_blank">Get directions</a>
+    </div>
+  </div>
+
+  <div style="margin-top:32px; display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+    <div class="contact-card" style="text-align:left;">
+      <h3>Business hours</h3>
+      <p>Mon – Sat: 8:30am – 6:00pm<br>Sunday: Closed</p>
+      <h3 style="margin-top:20px;">Email</h3>
+      <p>jbinvestment61@gmail.com</p>
+    </div>
+    <div class="contact-card" style="text-align:left;">
+      <h3>Follow us</h3>
+      <p>Stay updated on new arrivals and offers.</p>
+      <div class="social-row" style="justify-content:flex-start;">
+        <a href="https://facebook.com/sephocmotorsuganda" target="_blank" aria-label="Facebook">f</a>
+        <a href="https://instagram.com/sephocmotorsuganda" target="_blank" aria-label="Instagram">ig</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-embed">
+    <iframe
+      src="https://www.google.com/maps?q=Naguru,Kampala,Uganda&output=embed"
+      loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+</section>
+
+<script src="js/cars-data.js"></script>
+<script>
+  document.getElementById("wa-1").href = waLink("Hi, I'd like to know more about your inventory");
+</script>
+
+<script>renderWhatsAppFloat();</script>
+<script>renderFooter();</script>
+</body>
+</html>

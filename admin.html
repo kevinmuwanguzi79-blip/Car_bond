@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Sephoc Motors Uganda</title>
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  body { background: var(--bg-section); }
+  .admin-shell { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+  .admin-card { background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow); margin-bottom:24px; }
+  .stat-row { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
+  .stat { background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:20px; text-align:center; box-shadow:var(--shadow); }
+  .stat .num { font-size:1.8rem; font-weight:800; }
+  table.admin-table { width:100%; border-collapse:collapse; font-size:0.9rem; }
+  table.admin-table th, table.admin-table td { text-align:left; padding:10px; border-bottom:1px solid var(--border); }
+  table.admin-table th { color:var(--text-muted); font-weight:600; }
+  .form-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .form-grid input, .form-grid select { padding:10px; border:1px solid var(--border); border-radius:8px; font-size:0.9rem; }
+  .tag-btn { padding:4px 10px; border-radius:20px; border:none; font-size:0.75rem; font-weight:700; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<div class="admin-shell">
+
+  <div id="login-view" class="admin-card" style="max-width:380px; margin:60px auto;">
+    <h2 style="margin-top:0;">Admin login</h2>
+    <p style="color:var(--text-muted); font-size:0.9rem;">Demo only — wire this up to real auth (Supabase/NextAuth) before going live.</p>
+    <input type="email" placeholder="Email" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid var(--border); border-radius:8px;">
+    <input type="password" placeholder="Password" style="width:100%; padding:12px; margin-bottom:16px; border:1px solid var(--border); border-radius:8px;">
+    <button class="btn-primary" style="width:100%; border:none; cursor:pointer;" onclick="document.getElementById('login-view').style.display='none'; document.getElementById('dashboard-view').style.display='block';">Log in</button>
+  </div>
+
+  <div id="dashboard-view" style="display:none;">
+    <h1 style="font-size:1.6rem;">Dashboard</h1>
+
+    <div class="stat-row">
+      <div class="stat"><div class="num" id="stat-total">0</div>Total cars</div>
+      <div class="stat"><div class="num" id="stat-available">0</div>Available</div>
+      <div class="stat"><div class="num" id="stat-brands">0</div>Brands listed</div>
+    </div>
+
+    <div class="admin-card">
+      <h3 style="margin-top:0;">Add a car</h3>
+      <div class="form-grid">
+        <input id="in-brand" placeholder="Brand (e.g. Toyota)">
+        <input id="in-model" placeholder="Model (e.g. Land Cruiser Prado)">
+        <input id="in-year" placeholder="Year" type="number">
+        <input id="in-type" placeholder="Type (SUV, Sedan...)">
+        <input id="in-price" placeholder="Price (USh millions)" type="number">
+        <select id="in-transmission">
+          <option>Automatic</option>
+          <option>Manual</option>
+        </select>
+        <select id="in-fuel">
+          <option>Petrol</option>
+          <option>Diesel</option>
+        </select>
+        <input id="in-mileage" placeholder="Mileage (optional)">
+        <select id="in-status">
+          <option value="available">Available</option>
+          <option value="reserved">Reserved</option>
+          <option value="sold">Sold</option>
+        </select>
+      </div>
+      <button class="btn-primary" style="border:none; cursor:pointer; margin-top:16px;" onclick="addCar()">Add to inventory</button>
+      <p style="font-size:0.8rem; color:var(--text-muted); margin-top:8px;">Photo upload + drag-to-reorder gallery hooks in here once connected to storage (e.g. Cloudinary/Supabase Storage).</p>
+    </div>
+
+    <div class="admin-card">
+      <h3 style="margin-top:0;">Manage inventory</h3>
+      <table class="admin-table">
+        <thead>
+          <tr><th>Car</th><th>Year</th><th>Price</th><th>Status</th><th>Action</th></tr>
+        </thead>
+        <tbody id="admin-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="js/cars-data.js"></script>
+<script>
+  let localCars = [...CARS];
+
+  function renderStats() {
+    document.getElementById("stat-total").textContent = localCars.length;
+    document.getElementById("stat-available").textContent = localCars.filter(c => c.status === "available").length;
+    document.getElementById("stat-brands").textContent = new Set(localCars.map(c => c.brand)).size;
+  }
+
+  function renderTable() {
+    const body = document.getElementById("admin-table-body");
+    body.innerHTML = localCars.map(c => `
+      <tr>
+        <td>${c.year} ${c.brand} ${c.model}</td>
+        <td>${c.year}</td>
+        <td>USh ${c.price}m</td>
+        <td>
+          <select onchange="setStatus(${c.id}, this.value)">
+            <option value="available" ${c.status==="available"?"selected":""}>Available</option>
+            <option value="reserved" ${c.status==="reserved"?"selected":""}>Reserved</option>
+            <option value="sold" ${c.status==="sold"?"selected":""}>Sold</option>
+          </select>
+        </td>
+        <td><button class="tag-btn" style="background:#fdecea;color:#c0392b;" onclick="removeCar(${c.id})">Delete</button></td>
+      </tr>
+    `).join("");
+  }
+
+  function setStatus(id, status) {
+    const car = localCars.find(c => c.id === id);
+    if (car) car.status = status;
+    renderStats();
+  }
+
+  function removeCar(id) {
+    localCars = localCars.filter(c => c.id !== id);
+    renderTable();
+    renderStats();
+  }
+
+  function addCar() {
+    const brand = document.getElementById("in-brand").value.trim();
+    const model = document.getElementById("in-model").value.trim();
+    const year = Number(document.getElementById("in-year").value);
+    const type = document.getElementById("in-type").value.trim() || "SUV";
+    const price = Number(document.getElementById("in-price").value);
+    if (!brand || !model || !year || !price) { alert("Fill in brand, model, year and price."); return; }
+    const newCar = {
+      id: Math.max(...localCars.map(c => c.id)) + 1,
+      brand, model, year, type, price,
+      transmission: document.getElementById("in-transmission").value,
+      fuel: document.getElementById("in-fuel").value,
+      mileage: document.getElementById("in-mileage").value || undefined,
+      status: document.getElementById("in-status").value,
+    };
+    localCars.unshift(newCar);
+    renderTable();
+    renderStats();
+    ["in-brand","in-model","in-year","in-type","in-price","in-mileage"].forEach(id => document.getElementById(id).value = "");
+  }
+
+  renderStats();
+  renderTable();
+</script>
+
+</body>
+</html>

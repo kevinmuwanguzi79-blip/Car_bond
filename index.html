@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sephoc Motors Uganda — New &amp; Used Vehicle Dealership, Kampala</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<script src="js/partials.js"></script>
+<script>renderHeader("index.html");</script>
+
+<section class="hero">
+  <h1>Find your next car, sorted.</h1>
+  <p class="sub">New, used &amp; commercial vehicles — inspected, imported, and ready to drive in Kampala.</p>
+
+  <div class="filter-bar">
+    <select id="f-brand" onchange="populateModelFilter('f-brand','f-model')"></select>
+    <select id="f-model"><option value="">All models</option></select>
+    <select id="f-type">
+      <option value="">Any type</option>
+      <option value="SUV">SUV</option>
+      <option value="Sedan">Sedan</option>
+      <option value="Pickup">Pickup</option>
+      <option value="Van">Van</option>
+      <option value="Hatchback">Hatchback</option>
+      <option value="Wagon">Wagon</option>
+    </select>
+    <select id="f-year"></select>
+    <button onclick="applyFilters({brandId:'f-brand',modelId:'f-model',typeId:'f-type',yearId:'f-year',sortId:'f-sort',targetId:'featured-grid'}); document.getElementById('featured-grid').scrollIntoView({behavior:'smooth'});">Search cars</button>
+  </div>
+
+  <div class="budget-chips">
+    <a href="inventory.html?maxPrice=50">Under USh 50m</a>
+    <a href="inventory.html?maxPrice=100">Under USh 100m</a>
+    <a href="inventory.html?maxPrice=200">Under USh 200m</a>
+    <a href="inventory.html">Browse all inventory</a>
+  </div>
+</section>
+
+<div class="trust-bar">
+  <strong>New, Used &amp; Commercial Vehicle Dealership</strong> — Naguru, Kampala, Uganda. Usually replies within the hour on WhatsApp.
+</div>
+
+<section class="section">
+  <div class="section-header">
+    <h2>Featured inventory</h2>
+    <a class="view-all" href="inventory.html">View all cars →</a>
+  </div>
+  <div id="featured-grid" class="car-grid"></div>
+</section>
+
+<section class="section alt">
+  <div class="section-header">
+    <h2>Talk to us</h2>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-card whatsapp">
+      <div class="icon">💬</div>
+      <h3>WhatsApp</h3>
+      <p>Fastest way to reach us — usually within the hour</p>
+      <a class="btn" href="#" id="wa-btn" target="_blank">Chat now</a>
+    </div>
+    <div class="contact-card call">
+      <div class="icon">📞</div>
+      <h3>Call us</h3>
+      <p>(+256) 70 411 35 90</p>
+      <a class="btn" href="tel:+256704113590">Call now</a>
+    </div>
+    <div class="contact-card location">
+      <div class="icon">📍</div>
+      <h3>Visit us</h3>
+      <p>Naguru, Kampala, Uganda<br>Mon–Sat: 8:30am – 6:00pm</p>
+      <a class="btn" href="contact.html">Get directions</a>
+    </div>
+  </div>
+</section>
+
+<script src="js/cars-data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  populateBrandFilter("f-brand");
+  populateYearFilter("f-year");
+  renderCars(CARS.slice(0, 8), "featured-grid");
+  document.getElementById("wa-btn").href = waLink("Hi, I'd like to know more about your inventory");
+</script>
+
+<script>renderWhatsAppFloat();</script>
+<script>renderFooter();</script>
+</body>
+</html>

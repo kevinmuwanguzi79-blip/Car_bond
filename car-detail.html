@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car details — Sephoc Motors Uganda</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<script src="js/partials.js"></script>
+<script>renderHeader("inventory.html");</script>
+
+<section class="section" id="detail-root" style="padding-top:40px;">
+  Loading…
+</section>
+
+<script src="js/cars-data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const id = Number(params.get("id"));
+  const car = CARS.find(c => c.id === id) || CARS[0];
+
+  document.title = `${car.year} ${car.brand} ${car.model} — Sephoc Motors Uganda`;
+
+  const statusLabel = { available: "Available", reserved: "Reserved", sold: "Sold" }[car.status] || "Available";
+  const enquiryMsg = `Hi, I'm interested in the ${car.year} ${car.brand} ${car.model} (USh ${car.price}m) listed on your site.`;
+
+  document.getElementById("detail-root").innerHTML = `
+    <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:40px; align-items:start;">
+      <div>
+        <div class="photo placeholder" style="aspect-ratio:4/3; border-radius:var(--radius); border:1px solid var(--border);">
+          <div>
+            <div style="font-size:2.4rem;font-weight:800;color:var(--accent-dark);">${car.brand.slice(0,2).toUpperCase()}</div>
+            <div>${car.brand} ${car.model}<br>gallery photos pending</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <span class="status-badge status-${car.status}">${statusLabel}</span>
+        <h1 style="margin:8px 0 4px; font-size:1.8rem;">${car.year} ${car.brand} ${car.model}</h1>
+        <p style="color:var(--text-muted); margin:0 0 20px;">${car.type} • ${car.transmission} • ${car.fuel}${car.mileage ? " • " + car.mileage : ""}</p>
+        <div style="font-size:2rem; font-weight:800; margin-bottom:24px;">USh ${car.price}m</div>
+
+        <div style="display:flex; gap:12px; margin-bottom:32px;">
+          <a class="btn-primary" style="background:var(--whatsapp);" href="${waLink(enquiryMsg)}" target="_blank">Enquire on WhatsApp</a>
+          <a class="btn-primary" style="background:#2b5fe0;" href="tel:+256704113590">Call dealer</a>
+        </div>
+
+        <table style="width:100%; border-collapse:collapse; font-size:0.92rem;">
+          <tr><td style="padding:10px 0; color:var(--text-muted); border-bottom:1px solid var(--border);">Brand</td><td style="padding:10px 0; border-bottom:1px solid var(--border);">${car.brand}</td></tr>
+          <tr><td style="padding:10px 0; color:var(--text-muted); border-bottom:1px solid var(--border);">Model</td><td style="padding:10px 0; border-bottom:1px solid var(--border);">${car.model}</td></tr>
+          <tr><td style="padding:10px 0; color:var(--text-muted); border-bottom:1px solid var(--border);">Year</td><td style="padding:10px 0; border-bottom:1px solid var(--border);">${car.year}</td></tr>
+          <tr><td style="padding:10px 0; color:var(--text-muted); border-bottom:1px solid var(--border);">Type</td><td style="padding:10px 0; border-bottom:1px solid var(--border);">${car.type}</td></tr>
+          <tr><td style="padding:10px 0; color:var(--text-muted); border-bottom:1px solid var(--border);">Transmission</td><td style="padding:10px 0; border-bottom:1px solid var(--border);">${car.transmission}</td></tr>
+          <tr><td style="padding:10px 0; color:var(--text-muted); border-bottom:1px solid var(--border);">Fuel</td><td style="padding:10px 0; border-bottom:1px solid var(--border);">${car.fuel}</td></tr>
+          ${car.mileage ? `<tr><td style="padding:10px 0; color:var(--text-muted);">Mileage</td><td style="padding:10px 0;">${car.mileage}</td></tr>` : ""}
+        </table>
+      </div>
+    </div>
+  `;
+</script>
+
+<script>renderWhatsAppFloat();</script>
+<script>renderFooter();</script>
+</body>
+</html>
